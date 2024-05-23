@@ -1,9 +1,49 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinMultiplatform)
 }
 
 apply(from = "${rootProject.projectDir}/publish.gradle")
+
+kotlin {
+//    applyDefaultHierarchyTemplate()
+    androidTarget {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = JavaVersion.VERSION_1_8.toString()
+            }
+        }
+    }
+    jvm()
+    macosX64()
+    macosArm64()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    sourceSets {
+//        val androidMain by getting
+//        val jvmMain by getting
+
+        commonMain.dependencies {
+            api("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha02")
+        }
+
+        androidMain.dependencies {
+//            api(libs.compose.navigation)
+            api("org.jetbrains.androidx.core:core-bundle:1.0.0") // TODO RACOSTA why do I need this?
+        }
+
+//        androidMain.dependsOn(jvmMain)
+    }
+
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=com.ramcosta.composedestinations.annotation.internal.InternalDestinationsApi"
+        )
+    }
+}
 
 android {
 
@@ -12,7 +52,6 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toIntOrNull()
-        targetSdk = libs.versions.targetSdk.get().toIntOrNull()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles.add(File("consumer-rules.pro"))
@@ -34,10 +73,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
-
     buildFeatures {
         compose = true
     }
@@ -45,15 +80,4 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += listOf(
-        "-opt-in=kotlin.RequiresOptIn",
-        "-opt-in=com.ramcosta.composedestinations.annotation.internal.InternalDestinationsApi"
-    )
-}
-
-dependencies {
-    api(libs.compose.navigation)
 }

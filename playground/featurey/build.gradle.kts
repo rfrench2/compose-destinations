@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
     id("com.google.devtools.ksp") version libs.versions.ksp.get()
     kotlin("plugin.serialization")
 }
@@ -12,7 +12,6 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toIntOrNull()
-        targetSdk = libs.versions.targetSdk.get().toIntOrNull()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles.add(File("consumer-rules.pro"))

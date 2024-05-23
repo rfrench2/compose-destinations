@@ -11,6 +11,7 @@ import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import com.ramcosta.composedestinations.utils.destination
 import com.ramcosta.composedestinations.utils.startDestination
+import com.ramcosta.composedestinations.utils.toDestinationsNavigator
 import com.ramcosta.samples.playground.commons.DrawerContent
 import com.ramcosta.samples.playground.ui.screens.NavGraphs
 import com.ramcosta.samples.playground.ui.screens.destinations.ProfileSettingsProfileSettingsScreenDestination
@@ -35,7 +36,7 @@ fun MyDrawer(
                     if (navController.currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
                         && navController.currentBackStackEntry?.destination() != clickedDestination
                     ) {
-                        navController.navigate(clickedDestination as DirectionDestinationSpec)
+                        navController.toDestinationsNavigator().navigate(clickedDestination as DirectionDestinationSpec)
                         coroutineScope.launch { scaffoldState.drawerState.close() }
                     }
                 }
@@ -45,14 +46,14 @@ fun MyDrawer(
     ProfileSettingsProfileSettingsScreenDestination.DrawerContent(
         isSelected = destination == ProfileSettingsProfileSettingsScreenDestination,
         onDestinationClick = {
-            navController.navigate(ProfileSettingsProfileSettingsScreenDestination(true))
+            navController.toDestinationsNavigator().navigate(ProfileSettingsProfileSettingsScreenDestination(true))
         }
     )
 
     RootProfileSettingsScreenDestination.DrawerContent(
         isSelected = destination == RootProfileSettingsScreenDestination,
         onDestinationClick = {
-            navController.navigate(RootProfileSettingsScreenDestination(false))
+            navController.toDestinationsNavigator().navigate(RootProfileSettingsScreenDestination(false))
         }
     )
 }
